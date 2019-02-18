@@ -1,10 +1,9 @@
-package com.homework.lesson3.task1;
+package com.homework.lesson3.task1and2;
 
 
-import java.util.Arrays;
-import java.util.RandomAccess;
+import java.util.*;
 
-public class MyArrayList<E> implements RandomAccess {
+public class MyArrayList<E> implements RandomAccess, Iterable<E> {
     private static final int DEFAULT_CAPACITY = 5;
 
     private Object[] array;
@@ -83,4 +82,34 @@ public class MyArrayList<E> implements RandomAccess {
         return true;
     }
 
+    public Iterator<E> iterator() {
+        return new Itr();
+    }
+
+    private class Itr implements Iterator<E> {
+        int cursor = 0;
+        int prevRet = -1;
+
+        public boolean hasNext() {
+            return cursor != size;
+        }
+
+        public E next() {
+            if (cursor >= size) {
+                throw new NoSuchElementException();
+            }
+            prevRet = cursor;
+            cursor++;
+            return (E) array[prevRet];
+        }
+
+        public void remove() {
+            if (prevRet < 0) {
+                throw new IllegalStateException();
+            }
+            MyArrayList.this.remove(prevRet);
+            cursor = prevRet;
+            prevRet = -1;
+        }
+    }
 }
